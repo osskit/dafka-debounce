@@ -2,9 +2,8 @@ package src.main.java.monitoring;
 
 import io.prometheus.client.Counter;
 import io.prometheus.client.Histogram;
-import src.main.java.configuration.Config;
-
 import java.util.Arrays;
+import src.main.java.configuration.Config;
 
 public class Monitor {
 
@@ -18,31 +17,28 @@ public class Monitor {
     public static void init() {
         if (Config.PROMETHEUS_BUCKETS != null) {
             buckets =
-                    Arrays
-                            .asList(Config.PROMETHEUS_BUCKETS.split(","))
-                            .stream()
-                            .mapToDouble(s -> Double.parseDouble(s))
-                            .toArray();
+                Arrays
+                    .asList(Config.PROMETHEUS_BUCKETS.split(","))
+                    .stream()
+                    .mapToDouble(s -> Double.parseDouble(s))
+                    .toArray();
         }
 
-
         messageDurationInWindow =
-                Histogram
-                        .build()
-                        .buckets(buckets)
-                        .name("message_duration_in_window")
-                        .help("message_duration_in_window")
-                        .register();
+            Histogram
+                .build()
+                .buckets(buckets)
+                .name("message_duration_in_window")
+                .help("message_duration_in_window")
+                .register();
 
         debounceMessageStarted =
-                Counter.build().name("debounce_message_started").help("debounce_message_started").register();
+            Counter.build().name("debounce_message_started").help("debounce_message_started").register();
 
         debounceMessageProduced =
-                Counter.build().name("debounce_message_produced").help("debounce_message_produced").register();
+            Counter.build().name("debounce_message_produced").help("debounce_message_produced").register();
 
-        messagesDebounced =
-                Counter.build().name("messages_debounced").help("messages_debounced").register();
-
+        messagesDebounced = Counter.build().name("messages_debounced").help("messages_debounced").register();
     }
 
     public static void captureDebounceMessageStarted() {
@@ -57,5 +53,4 @@ public class Monitor {
         debounceMessageProduced.inc();
         messageDurationInWindow.observe(((double) (executionEnd - executionStart)) / 1000);
     }
-
 }

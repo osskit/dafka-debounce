@@ -5,9 +5,10 @@ import src.main.java.configuration.Config;
 public class PartitioningKeyResolverFactory {
 
     private static final UuidPartitioningKeyResolver uuidPartitioningKeyResolver = new UuidPartitioningKeyResolver();
-    private static final SpecificFieldsPartitioningKeyResolver specificFieldsPartitioningKeyResolver = new SpecificFieldsPartitioningKeyResolver();
-    private static final OriginalPartitioningKeyResolver originalPartitioningKeyResolver = new OriginalPartitioningKeyResolver();
-
+    private static final SpecificFieldsPartitioningKeyResolver specificFieldsPartitioningKeyResolver =
+        new SpecificFieldsPartitioningKeyResolver();
+    private static final OriginalPartitioningKeyResolver originalPartitioningKeyResolver =
+        new OriginalPartitioningKeyResolver();
 
     public static PartitioningKeyResolver getPartitioningKeyResolverInstance() {
         return switch (Config.OUTPUT_PARTITIONING_KEY) {

@@ -1,6 +1,11 @@
 package src.main.java.debounce;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.Windowed;
 import org.apache.kafka.streams.processor.PunctuationType;
@@ -15,16 +20,12 @@ import org.slf4j.LoggerFactory;
 import src.main.java.monitoring.Monitor;
 import src.main.java.partitioner.PartitioningKeyResolver;
 
-import java.time.Duration;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-
 public abstract class BaseDebounceProcessor implements Processor<String, JsonNode, String, JsonNode>, Punctuator {
 
     private static final Logger logger = LoggerFactory.getLogger(DebounceUseFirstProcessor.class);
-    private static final DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss").withZone(ZoneId.systemDefault());
+    private static final DateTimeFormatter format = DateTimeFormatter
+        .ofPattern("HH:mm:ss")
+        .withZone(ZoneId.systemDefault());
     private static final Instant beginningOfTime = Instant.ofEpochSecond(0);
 
     String storeId;
@@ -53,7 +54,12 @@ public abstract class BaseDebounceProcessor implements Processor<String, JsonNod
         KeyValueIterator<Windowed<String>, JsonNode> iterator = store.fetchAll(beginningOfTime, windowRight);
         while (iterator.hasNext()) {
             KeyValue<Windowed<String>, JsonNode> entry = iterator.next();
-            logger.info("producing record {} {}  {}", entry.key.key(), format.format(entry.key.window().startTime()), format.format(entry.key.window().endTime()));
+            logger.info(
+                "producing record {} {}  {}",
+                entry.key.key(),
+                format.format(entry.key.window().startTime()),
+                format.format(entry.key.window().endTime())
+            );
 
             String newRecordKey = partitioningKeyResolver.resolvePartitioningKey(entry.key.key(), entry.value);
 
@@ -68,13 +74,17 @@ public abstract class BaseDebounceProcessor implements Processor<String, JsonNod
 
     @Override
     public void process(Record<String, JsonNode> newRecord) {
-
         Monitor.captureDebounceMessageStarted();
 
         Instant windowStartTime = Instant.now().minus(windowSize, ChronoUnit.SECONDS);
         Instant newWindowStartTime = Instant.now();
 
-        KeyValueIterator<Windowed<String>, JsonNode> iterator = store.fetch(newRecord.key(), newRecord.key(), windowStartTime, Instant.now());
+        KeyValueIterator<Windowed<String>, JsonNode> iterator = store.fetch(
+            newRecord.key(),
+            newRecord.key(),
+            windowStartTime,
+            Instant.now()
+        );
         KeyValue<Windowed<String>, JsonNode> existingRecord = null;
         if (iterator.hasNext()) {
             existingRecord = iterator.next();
@@ -86,15 +96,20 @@ public abstract class BaseDebounceProcessor implements Processor<String, JsonNod
         Record<String, JsonNode> recordToPut = newRecord;
 
         if (existingRecord != null) {
-            Record<String, JsonNode> oldRecord = new Record<>(existingRecord.key.key(), existingRecord.value, existingRecord.key.window().start());
+            Record<String, JsonNode> oldRecord = new Record<>(
+                existingRecord.key.key(),
+                existingRecord.value,
+                existingRecord.key.window().start()
+            );
             Monitor.captureMessagesDebounced();
             recordToPut = this.selectRecordToPutInWindow(oldRecord, newRecord);
         }
 
         store.put(recordToPut.key(), recordToPut.value(), newWindowStartTime.toEpochMilli());
-
     }
 
-    public abstract Record<String, JsonNode> selectRecordToPutInWindow(Record<String, JsonNode> oldRecord, Record<String, JsonNode> newRecord);
-    
+    public abstract Record<String, JsonNode> selectRecordToPutInWindow(
+        Record<String, JsonNode> oldRecord,
+        Record<String, JsonNode> newRecord
+    );
 }
