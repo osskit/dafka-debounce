@@ -1,7 +1,6 @@
 package src.main.java.configuration;
 
 import io.github.cdimascio.dotenv.Dotenv;
-
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -50,13 +49,20 @@ public class Config {
         WINDOW_DURATION = getInt(dotenv, "WINDOW_DURATION");
         WINDOW_RETENTION_PERIOD = getOptionalInt(dotenv, "WINDOW_RETENTION_PERIOD", WINDOW_DURATION * 3);
 
-        DEDUPLICATION_OPERATOR = DeduplicationOperator.valueOf(getOptionalString(dotenv, "DEDUPLICATION_OPERATOR", "LAST"));
+        DEDUPLICATION_OPERATOR =
+            DeduplicationOperator.valueOf(getOptionalString(dotenv, "DEDUPLICATION_OPERATOR", "LAST"));
 
-        OUTPUT_PARTITIONING_KEY = OutputKeyType.valueOf(getOptionalString(dotenv, "OUTPUT_PARTITIONING_KEY", "KEY_FROM_SOURCE"));
+        OUTPUT_PARTITIONING_KEY =
+            OutputKeyType.valueOf(getOptionalString(dotenv, "OUTPUT_PARTITIONING_KEY", "KEY_FROM_SOURCE"));
         OUTPUT_PARTITIONING_KEY_FIELDS = getOptionalStringList(dotenv, "OUTPUT_PARTITIONING_KEY_FIELDS");
 
-        if (OUTPUT_PARTITIONING_KEY.equals(OutputKeyType.SPECIFIC_FIELDS) && (OUTPUT_PARTITIONING_KEY_FIELDS == null || OUTPUT_PARTITIONING_KEY_FIELDS.isEmpty())) {
-            throw new Exception("env var OUTPUT_KEY_TYPE is set to SPECIFIC_FIELDS but OUTPUT_PARTITIONING_KEY_FIELDS is missing or empty");
+        if (
+            OUTPUT_PARTITIONING_KEY.equals(OutputKeyType.SPECIFIC_FIELDS) &&
+            (OUTPUT_PARTITIONING_KEY_FIELDS == null || OUTPUT_PARTITIONING_KEY_FIELDS.isEmpty())
+        ) {
+            throw new Exception(
+                "env var OUTPUT_KEY_TYPE is set to SPECIFIC_FIELDS but OUTPUT_PARTITIONING_KEY_FIELDS is missing or empty"
+            );
         }
 
         // --------------------
@@ -149,5 +155,4 @@ public class Config {
 
         return new String(Files.readAllBytes(Paths.get(filePath)));
     }
-
 }

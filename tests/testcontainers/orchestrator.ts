@@ -1,8 +1,6 @@
 import {Network, StartedNetwork} from 'testcontainers';
 import {dafkaDebounce} from './dafkaDebounce.js';
 import {kafka} from './kafka.js';
-import {wiremock} from './wiremock.js';
-import {WireMockClient} from '@osskit/wiremock-client';
 import {Kafka} from 'kafkajs';
 
 export interface KafkaOrchestrator {
@@ -13,8 +11,7 @@ export interface KafkaOrchestrator {
 
 export interface Orchestrator {
     stop: () => Promise<void>;
-    wireMockClient: WireMockClient;
-    consumerReady: () => Promise<Response>;
+    streamReady: () => Promise<Response>;
 }
 
 export const start = async () => {
@@ -39,8 +36,7 @@ const startOrchestratorInner = async (
     network: StartedNetwork,
     dafkaEnv: Record<string, string>
 ): Promise<Orchestrator> => {
-    const [{ready: streamReady, stop: stopService}] = await dafkaDebounce(network, dafkaEnv);
-    );
+    const {ready: streamReady, stop: stopService} = await dafkaDebounce(network, dafkaEnv);
 
     return {
         async stop() {

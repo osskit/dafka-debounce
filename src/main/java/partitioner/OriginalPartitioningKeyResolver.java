@@ -4,8 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public class OriginalPartitioningKeyResolver implements PartitioningKeyResolver {
 
-    protected OriginalPartitioningKeyResolver() {
-    }
+    protected OriginalPartitioningKeyResolver() {}
 
     @Override
     public String resolvePartitioningKey(String originalKey, JsonNode value) {

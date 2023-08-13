@@ -1,14 +1,14 @@
 package src.main.java.stream;
 
+import java.util.Properties;
 import org.apache.kafka.common.config.SaslConfigs;
 import org.apache.kafka.common.config.SslConfigs;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsConfig;
 import src.main.java.configuration.Config;
 
-import java.util.Properties;
-
 public class StreamConfiguration extends Properties {
+
     public StreamConfiguration() {
         super();
         put(StreamsConfig.APPLICATION_ID_CONFIG, Config.GROUP_ID);
@@ -29,7 +29,6 @@ public class StreamConfiguration extends Properties {
     }
 
     private void buildAuthProperties() {
-
         if (!Config.USE_SASL_AUTH) {
             return;
         }
@@ -43,13 +42,13 @@ public class StreamConfiguration extends Properties {
         put(SaslConfigs.SASL_MECHANISM, Config.SASL_MECHANISM.toUpperCase());
         put(SslConfigs.SSL_ENDPOINT_IDENTIFICATION_ALGORITHM_CONFIG, "");
         put(
-                SaslConfigs.SASL_JAAS_CONFIG,
-                String.format(
-                        "org.apache.kafka.common.security.%s required username=\"%s\" password=\"%s\";",
-                        getSaslMechanism(),
-                        Config.SASL_USERNAME,
-                        Config.SASL_PASSWORD
-                )
+            SaslConfigs.SASL_JAAS_CONFIG,
+            String.format(
+                "org.apache.kafka.common.security.%s required username=\"%s\" password=\"%s\";",
+                getSaslMechanism(),
+                Config.SASL_USERNAME,
+                Config.SASL_PASSWORD
+            )
         );
     }
 }

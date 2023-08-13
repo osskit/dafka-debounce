@@ -6,19 +6,17 @@ import com.sun.net.httpserver.HttpServer;
 import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.exporter.HTTPServer;
 import io.prometheus.client.hotspot.DefaultExports;
-import src.main.java.configuration.Config;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
+import src.main.java.configuration.Config;
 
 public class MonitoringServer {
 
     private boolean streamRunning;
     private HttpServer server;
 
-    public MonitoringServer() {
-    }
+    public MonitoringServer() {}
 
     public MonitoringServer start() throws IOException {
         if (Config.MONITORING_SERVER_PORT == 0) {
@@ -41,7 +39,6 @@ public class MonitoringServer {
     public void setStreamRunning(boolean running) {
         streamRunning = running;
     }
-
 
     public void close() {
         if (server != null) {
@@ -82,5 +79,4 @@ public class MonitoringServer {
         os.write(responseText.getBytes());
         os.close();
     }
-
 }
