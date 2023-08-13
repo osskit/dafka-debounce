@@ -1,18 +1,18 @@
 {
-    "name": "dafka-consumer",
-    "version": "7.5.10",
-    "description": "Dockerized kafka consumer",
+    "name": "dafka-debounce",
+    "version": "0.0.1",
+    "description": "Dockerized kafka debounce",
     "private": true,
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/osskit/dafka-consumer.git"
+        "url": "git+https://github.com/osskit/dafka-debounce.git"
     },
     "author": "osskit",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/osskit/dafka-consumer/issues"
+        "url": "https://github.com/osskit/dafka-debounce/issues"
     },
-    "homepage": "https://github.com/osskit/dafka-consumer#readme",
+    "homepage": "https://github.com/osskit/dafka-debounce#readme",
     "scripts": {
         "pretest": "bazel build //src:image.tar && docker load -i bazel-bin/src/image.tar",
         "test": "NODE_OPTIONS=--experimental-vm-modules jest --config tests/jest.config.ts",
