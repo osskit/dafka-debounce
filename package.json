@@ -1,6 +1,6 @@
 {
     "name": "dafka-debounce",
-    "version": "0.0.8",
+    "version": "0.0.9",
     "description": "Dockerized kafka debounce",
     "private": true,
     "repository": {
