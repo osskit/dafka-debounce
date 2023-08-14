@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class Config {
 
-    public static String WINDOW_STORE_NAME = "window-store";
+    public static String WINDOW_STORE_NAME;
     //Required
     public static String KAFKA_BROKER;
     public static String GROUP_ID;
@@ -44,6 +44,8 @@ public class Config {
         // --------------------
         SOURCE_TOPIC = getString(dotenv, "SOURCE_TOPIC");
         TARGET_TOPIC = getString(dotenv, "TARGET_TOPIC");
+
+        WINDOW_STORE_NAME = SOURCE_TOPIC + "-window-store";
 
         WINDOW_DURATION = getInt(dotenv, "WINDOW_DURATION");
         WINDOW_RETENTION_PERIOD = getOptionalInt(dotenv, "WINDOW_RETENTION_PERIOD", WINDOW_DURATION * 3);
