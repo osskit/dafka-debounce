@@ -36,7 +36,7 @@ public class Config {
     public static String PROMETHEUS_BUCKETS;
 
     public static void init() throws Exception {
-        Dotenv dotenv = Dotenv.configure().directory("/").load();
+        Dotenv dotenv = Dotenv.configure().load();
 
         KAFKA_BROKER = getString(dotenv, "KAFKA_BROKER");
         GROUP_ID = getString(dotenv, "GROUP_ID");

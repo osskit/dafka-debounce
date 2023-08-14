@@ -9,20 +9,20 @@
                 <timestampFormatTimezoneId>Etc/UTC</timestampFormatTimezoneId>
 
                 <jsonFormatter class="ch.qos.logback.contrib.jackson.JacksonJsonFormatter">
-                    <prettyPrint>true</prettyPrint>
+                    <prettyPrint>false</prettyPrint>
                 </jsonFormatter>
-                <appendLineSeparator>true</appendLineSeparator>
+                <appendLineSeparator>false</appendLineSeparator>
             </layout>
         </encoder>
     </appender>
 
-    <variable name="KAFKA_LOG_LEVEL" value="${KAFKA_LOG_LEVEL:-WARN}"/>
+    <variable name="KAFKA_LOG_LEVEL" value="${KAFKA_LOG_LEVEL:-DEBUG}"/>
 
     <logger name="org.apache.kafka" level="${KAFKA_LOG_LEVEL}" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
 
-    <root level="INFO">
+    <root level="DEBUG">
         <appender-ref ref="STDOUT"/>
     </root>
 </configuration>
