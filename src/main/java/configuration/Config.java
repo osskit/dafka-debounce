@@ -10,13 +10,13 @@ import java.util.stream.Collectors;
 
 public class Config {
 
+    public static String WINDOW_STORE_NAME = "window-store";
     //Required
     public static String KAFKA_BROKER;
     public static String GROUP_ID;
     public static String SOURCE_TOPIC;
     public static String TARGET_TOPIC;
 
-    public static String WINDOW_STORE_NAME;
     //Authentication
     public static boolean USE_SASL_AUTH;
     public static String SASL_USERNAME;
@@ -42,7 +42,6 @@ public class Config {
         GROUP_ID = getString(dotenv, "GROUP_ID");
 
         // --------------------
-        WINDOW_STORE_NAME = Config.GROUP_ID + "_debounce_store";
         SOURCE_TOPIC = getString(dotenv, "SOURCE_TOPIC");
         TARGET_TOPIC = getString(dotenv, "TARGET_TOPIC");
 
