@@ -8,8 +8,6 @@ import src.main.java.partitioner.PartitioningKeyResolver;
 
 public class DebounceUseFirstProcessor extends BaseDebounceProcessor {
 
-    private static final Logger logger = LoggerFactory.getLogger(DebounceUseFirstProcessor.class);
-
     protected DebounceUseFirstProcessor(
         String storeId,
         int windowSize,

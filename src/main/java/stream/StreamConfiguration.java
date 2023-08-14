@@ -1,6 +1,9 @@
 package src.main.java.stream;
 
 import java.util.Properties;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.RangeAssignor;
+import org.apache.kafka.clients.consumer.StickyAssignor;
 import org.apache.kafka.common.config.SaslConfigs;
 import org.apache.kafka.common.config.SslConfigs;
 import org.apache.kafka.common.serialization.Serdes;
@@ -16,6 +19,10 @@ public class StreamConfiguration extends Properties {
         put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, Config.KAFKA_BROKER);
         put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
         put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
+        put(
+            ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG,
+            String.format("%s,%s", StickyAssignor.class.getName(), RangeAssignor.class.getName())
+        );
 
         buildAuthProperties();
     }
