@@ -22,7 +22,7 @@ import src.main.java.partitioner.PartitioningKeyResolver;
 
 public abstract class BaseDebounceProcessor implements Processor<String, JsonNode, String, JsonNode>, Punctuator {
 
-    private static final Logger logger = LoggerFactory.getLogger(DebounceUseFirstProcessor.class);
+    private static final Logger logger = LoggerFactory.getLogger(BaseDebounceProcessor.class);
     private static final DateTimeFormatter format = DateTimeFormatter
         .ofPattern("HH:mm:ss")
         .withZone(ZoneId.systemDefault());

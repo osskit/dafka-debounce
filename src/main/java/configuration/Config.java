@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Config {
@@ -16,6 +15,10 @@ public class Config {
     public static String GROUP_ID;
     public static String SOURCE_TOPIC;
     public static String TARGET_TOPIC;
+
+    // Memory
+    public static int TOTAL_OFF_HEAP_SIZE_MB;
+    public static int TOTAL_MEMTABLE_MB;
 
     //Authentication
     public static boolean USE_SASL_AUTH;
@@ -44,6 +47,9 @@ public class Config {
         // --------------------
         SOURCE_TOPIC = getString(dotenv, "SOURCE_TOPIC");
         TARGET_TOPIC = getString(dotenv, "TARGET_TOPIC");
+
+        TOTAL_MEMTABLE_MB = getOptionalInt(dotenv, "TOTAL_MEMTABLE_MB", 100);
+        TOTAL_OFF_HEAP_SIZE_MB = getOptionalInt(dotenv, "TOTAL_OFF_HEAP_SIZE_MB", 10);
 
         WINDOW_STORE_NAME = SOURCE_TOPIC + "-window-store";
 

@@ -21,6 +21,7 @@ java_library(
         "@third_party//3rdparty/jvm/org/apache/kafka:kafka_clients",
         "@third_party//3rdparty/jvm/org/apache/kafka:connect_json",
         "@third_party//3rdparty/jvm/org/slf4j:slf4j_api",
+        "@third_party//3rdparty/jvm/org/rocksdb:rocksdbjni",
     ],
 )
 

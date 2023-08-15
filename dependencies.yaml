@@ -68,6 +68,11 @@ dependencies:
       lang: java
       version: "20180130"
 
+  org.rocksdb:
+    rocksdbjni:
+      lang: java
+      version: "7.1.2"
+
   org.slf4j:
     slf4j-api:
       lang: java

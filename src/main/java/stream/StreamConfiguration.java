@@ -8,9 +8,13 @@ import org.apache.kafka.common.config.SaslConfigs;
 import org.apache.kafka.common.config.SslConfigs;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsConfig;
+import src.main.java.configuration.BoundedMemoryRocksdbConfig;
 import src.main.java.configuration.Config;
 
 public class StreamConfiguration extends Properties {
+
+    private static final String TOTAL_OFF_HEAP_SIZE_MB = "rocksdb.total_offheap_size_mb";
+    private static final String TOTAL_MEMTABLE_MB = "rocksdb.total_memtable_mb";
 
     public StreamConfiguration() {
         super();
@@ -19,6 +23,9 @@ public class StreamConfiguration extends Properties {
         put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, Config.KAFKA_BROKER);
         put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
         put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
+        put(StreamsConfig.ROCKSDB_CONFIG_SETTER_CLASS_CONFIG, BoundedMemoryRocksdbConfig.class);
+        put(TOTAL_OFF_HEAP_SIZE_MB, Config.TOTAL_OFF_HEAP_SIZE_MB);
+        put(TOTAL_MEMTABLE_MB, Config.TOTAL_MEMTABLE_MB);
         put(
             ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG,
             String.format("%s,%s", StickyAssignor.class.getName(), RangeAssignor.class.getName())
