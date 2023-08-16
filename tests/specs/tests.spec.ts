@@ -28,56 +28,68 @@ describe('tests', () => {
     });
 
     const start = async (sourceTopic: string, targetTopic: string, debounceSettings?: Record<string, string>) => {
-        console.log('test 1');
+        const admin = kafkaOrchestrator.kafkaClient.admin();
+        await admin.createTopics({topics: [{topic: sourceTopic}, {topic: targetTopic}]});
+
         orchestrator = await kafkaOrchestrator.startOrchestrator({
             GROUP_ID: 'test',
             SOURCE_TOPIC: sourceTopic,
             TARGET_TOPIC: targetTopic,
             ...debounceSettings,
         });
-        console.log('test 2');
-        const admin = kafkaOrchestrator.kafkaClient.admin();
-        console.log('test 3');
-
-        await admin.createTopics({topics: [{topic: sourceTopic}, {topic: targetTopic}]});
-        console.log('test 4');
 
         await orchestrator.debounceReady();
-        console.log('test 5');
 
         producer = kafkaOrchestrator.kafkaClient.producer();
         consumer = kafkaOrchestrator.kafkaClient.consumer({groupId: 'test-consumer'});
-        console.log('test 6');
 
         await consumer.connect();
-        console.log('test 7');
+        await consumer.subscribe({topic: targetTopic, fromBeginning: true});
 
         await producer.connect();
-        console.log('test 8');
     };
 
-    it('Should debounce records from same key', async () => {
-        console.log('what!');
+    const assertOffset = async (topic: string) => {
+        const admin = kafkaOrchestrator.kafkaClient.admin();
 
+        await admin.connect();
+
+        const metadata = await admin.fetchOffsets({groupId: 'test-consumer', topics: [topic]});
+
+        await admin.disconnect();
+
+        expect(metadata).toMatchSnapshot();
+    };
+
+    it('Should debounce 4 records 2 of each key', async () => {
         await start('test-input', 'test-output', {
             WINDOW_DURATION: '5',
         });
-        console.log('im here');
+
         await producer.send({topic: 'test-input', messages: [{value: JSON.stringify({data: 'foo'}), key: 'fookey'}]});
         await producer.send({topic: 'test-input', messages: [{value: JSON.stringify({data: 'bar'}), key: 'barkey'}]});
-        console.log('im here 1');
+
         await delay(2000);
+
         await producer.send({topic: 'test-input', messages: [{value: JSON.stringify({data: 'foo1'}), key: 'fookey'}]});
         await producer.send({topic: 'test-input', messages: [{value: JSON.stringify({data: 'bar1'}), key: 'barkey'}]});
-        console.log('im here 2');
-        await delay(4000);
-        console.log('im here 3');
-        const consumedMessage = await new Promise<KafkaMessage>((resolve) => {
+
+        await delay(6000);
+
+        const messages: KafkaMessage[] = [];
+        await new Promise<KafkaMessage[]>((resolve) => {
             consumer.run({
-                eachMessage: async ({message}) => resolve(message),
+                eachMessage: async ({message}) => {
+                    messages.push(message);
+                    if (messages.length == 2) resolve(messages);
+                },
             });
         });
+        await delay(2000);
 
-        console.log('consumedMessage', consumedMessage);
-    }, 180000);
+        await assertOffset('test-output');
+
+        expect(JSON.parse(messages[0]?.value?.toString() ?? '{}')).toMatchSnapshot();
+        expect(JSON.parse(messages[1]?.value?.toString() ?? '{}')).toMatchSnapshot();
+    }, 15000);
 });
