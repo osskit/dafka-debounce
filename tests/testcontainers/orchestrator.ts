@@ -1,17 +1,17 @@
 import {Network, StartedNetwork} from 'testcontainers';
-import {dafkaDebounce} from './dafkaDebounce.js';
 import {kafka} from './kafka.js';
 import {Kafka} from 'kafkajs';
+import {dafkaDebounce} from './dafkaDebounce';
 
 export interface KafkaOrchestrator {
     stop: () => Promise<void>;
-    startOrchestrator: (dafkaEnv: Record<string, string>) => Promise<Orchestrator>;
+    startOrchestrator: (debounceEnv: Record<string, string>) => Promise<Orchestrator>;
     kafkaClient: Kafka;
 }
 
 export interface Orchestrator {
     stop: () => Promise<void>;
-    streamReady: () => Promise<Response>;
+    debounceReady: () => Promise<Response>;
 }
 
 export const start = async () => {
@@ -23,25 +23,24 @@ export const start = async () => {
         kafkaClient,
         stop: async () => {
             await stopKafka();
-
             await network.stop();
         },
-        startOrchestrator: async (dafkaEnv: Record<string, string>) => {
-            return startOrchestratorInner(network, dafkaEnv);
+        startOrchestrator: async (debounceEnv: Record<string, string>) => {
+            return startOrchestratorInner(network, debounceEnv);
         },
     };
 };
 
 const startOrchestratorInner = async (
     network: StartedNetwork,
-    dafkaEnv: Record<string, string>
+    debounceEnv: Record<string, string>
 ): Promise<Orchestrator> => {
-    const {ready: streamReady, stop: stopService} = await dafkaDebounce(network, dafkaEnv);
+    const {ready: debounceReady, stop: stopService} = await dafkaDebounce(network, debounceEnv);
 
     return {
         async stop() {
             await stopService();
         },
-        streamReady,
+        debounceReady,
     };
 };
