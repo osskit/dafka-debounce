@@ -596,6 +596,13 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
+"@testcontainers/kafka@^10.2.1":
+  version "10.2.1"
+  resolved "https://registry.yarnpkg.com/@testcontainers/kafka/-/kafka-10.2.1.tgz#7badd0da170cdac126ebce65406e66d416047422"
+  integrity sha512-yfZq3YlaT62FKkk5ITqb+0rg8YVlRQZSUOzag3HluT/o2hAFrBWcOrUhEzvbTytPbwpXmaQ6z4Q6CuijUCePqA==
+  dependencies:
+    testcontainers "^10.2.1"
+
 "@tsconfig/node10@^1.0.7":
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/@tsconfig/node10/-/node10-1.0.9.tgz#df4907fc07a886922637b15e02d4cebc4c0021b2"

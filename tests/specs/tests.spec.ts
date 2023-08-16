@@ -91,5 +91,5 @@ describe('tests', () => {
 
         expect(JSON.parse(messages[0]?.value?.toString() ?? '{}')).toMatchSnapshot();
         expect(JSON.parse(messages[1]?.value?.toString() ?? '{}')).toMatchSnapshot();
-    }, 15000);
+    }, 180000);
 });
