@@ -14,7 +14,7 @@
     },
     "homepage": "https://github.com/osskit/dafka-debounce#readme",
     "scripts": {
-        "pretest": "bazel build //src:image.tar && docker load -i bazel-dafka-debounce/bazel-out/darwin_arm64-fastbuild-ST-4a519fd6d3e4/bin/src/image.tar",
+        "pretest": "bazel build //src:image.tar && docker load -i bazel-bin/src/image.tar",
         "test": "NODE_OPTIONS=--experimental-vm-modules jest --config tests/jest.config.ts",
         "format": "prettier --write '**/*.{ts,js,json,java}'",
         "logs": "docker-compose -f tests/dafka.yml logs"
