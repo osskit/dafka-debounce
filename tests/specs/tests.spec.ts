@@ -67,14 +67,20 @@ describe('tests', () => {
         });
 
         await producer.send({topic: 'test-input', messages: [{value: JSON.stringify({data: 'foo'}), key: 'fookey'}]});
-        await producer.send({topic: 'test-input', messages: [{value: JSON.stringify({data: 'bar'}), key: 'barkey'}]});
 
         await delay(2000);
 
+        await producer.send({topic: 'test-input', messages: [{value: JSON.stringify({data: 'bar'}), key: 'barkey'}]});
+
+        await delay(1000);
+
         await producer.send({topic: 'test-input', messages: [{value: JSON.stringify({data: 'foo1'}), key: 'fookey'}]});
+
+        await delay(1000);
+
         await producer.send({topic: 'test-input', messages: [{value: JSON.stringify({data: 'bar1'}), key: 'barkey'}]});
 
-        await delay(6000);
+        await delay(5000);
 
         const messages: KafkaMessage[] = [];
         await new Promise<KafkaMessage[]>((resolve) => {
