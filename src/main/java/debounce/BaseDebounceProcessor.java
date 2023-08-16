@@ -43,7 +43,7 @@ public abstract class BaseDebounceProcessor implements Processor<String, JsonNod
     public void init(ProcessorContext<String, JsonNode> context) {
         this.context = context;
         this.store = context.getStateStore(storeId);
-        this.context.schedule(Duration.ofSeconds(windowSize), PunctuationType.WALL_CLOCK_TIME, this);
+        this.context.schedule(Duration.ofSeconds(windowSize / 2), PunctuationType.WALL_CLOCK_TIME, this);
     }
 
     @Override
