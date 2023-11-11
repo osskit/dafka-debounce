@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`tests Should debounce 4 records 2 of each key 1`] = `
+[
+  {
+    "partitions": [
+      {
+        "metadata": null,
+        "offset": "2",
+        "partition": 0,
+      },
+    ],
+    "topic": "test-output",
+  },
+]
+`;
+
+exports[`tests Should debounce 4 records 2 of each key 2`] = `
+{
+  "data": "foo1",
+}
+`;
+
+exports[`tests Should debounce 4 records 2 of each key 3`] = `
+{
+  "data": "bar1",
+}
+`;
