@@ -61,7 +61,7 @@ describe('tests', () => {
         expect(metadata).toMatchSnapshot();
     };
 
-    it('Should debounce 4 records 2 of each key', async () => {
+    it('Should debounce by key', async () => {
         await start('test-input', 'test-output', {
             WINDOW_DURATION: '5',
         });
@@ -98,4 +98,44 @@ describe('tests', () => {
         expect(JSON.parse(messages[0]?.value?.toString() ?? '{}')).toMatchSnapshot();
         expect(JSON.parse(messages[1]?.value?.toString() ?? '{}')).toMatchSnapshot();
     }, 180000);
+
+    it('Should debounce by specific fields', async () => {
+        await start('test-input', 'test-output', {
+            OUTPUT_PARTITIONING_KEY: 'SPECIFIC_FIELDS',
+            OUTPUT_PARTITIONING_KEY_FIELDS: 'data/type',
+            WINDOW_DURATION: '5',
+        });
+
+        await producer.send({topic: 'test-input', messages: [{value: JSON.stringify({data: {type: 'foo'}})}]});
+
+        await delay(2000);
+
+        await producer.send({topic: 'test-input', messages: [{value: JSON.stringify({data: {type: 'bar'}})}]});
+
+        await delay(1000);
+
+        await producer.send({topic: 'test-input', messages: [{value: JSON.stringify({data: {type: 'foo'}})}]});
+
+        await delay(1000);
+
+        await producer.send({topic: 'test-input', messages: [{value: JSON.stringify({data: {type: 'bar'}})}]});
+
+        await delay(5000);
+
+        const messages: KafkaMessage[] = [];
+        await new Promise<KafkaMessage[]>((resolve) => {
+            consumer.run({
+                eachMessage: async ({message}) => {
+                    messages.push(message);
+                    if (messages.length == 2) resolve(messages);
+                },
+            });
+        });
+        await delay(2000);
+
+        await assertOffset('test-output');
+
+        expect(JSON.parse(messages[0]?.value?.toString() ?? '{}')).toMatchSnapshot();
+        expect(JSON.parse(messages[1]?.value?.toString() ?? '{}')).toMatchSnapshot();
+    }, 180000);    
 });
