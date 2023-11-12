@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`tests Should debounce 4 records 2 of each key 1`] = `
+exports[`tests should debounce by key 1`] = `
 [
   {
     "partitions": [
@@ -15,13 +15,13 @@ exports[`tests Should debounce 4 records 2 of each key 1`] = `
 ]
 `;
 
-exports[`tests Should debounce 4 records 2 of each key 2`] = `
+exports[`tests should debounce by key 2`] = `
 {
   "data": "foo1",
 }
 `;
 
-exports[`tests Should debounce 4 records 2 of each key 3`] = `
+exports[`tests should debounce by key key 3`] = `
 {
   "data": "bar1",
 }
