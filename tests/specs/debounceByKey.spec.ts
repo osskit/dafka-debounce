@@ -3,10 +3,10 @@ import delay from 'delay';
 import type {Orchestrator} from '../testcontainers/orchestrator.js';
 import {start} from '../testcontainers/orchestrator.js';
 import {produce} from '../services/produce.js';
-// import {getOffset} from '../services/getOffset.js';
+import {getOffset} from '../services/getOffset.js';
 import {consume} from '../services/consume.js';
 
-const groupId = 'test';
+const groupId = 'the-consumer';
 const sourceTopic = 'test-input';
 const targetTopic = 'test-output';
 
@@ -44,9 +44,6 @@ describe('tests', () => {
         await delay(5000);
 
         await expect(consume(orchestrator.kafkaClient, targetTopic)).resolves.toMatchSnapshot();
-
-        await delay(5000);
-
-        // await expect(getOffset(orchestrator.kafkaClient, groupId, sourceTopic)).resolves.toBe(2);
+        await expect(getOffset(orchestrator.kafkaClient, groupId, sourceTopic)).resolves.toBe(2);
     });
 });
