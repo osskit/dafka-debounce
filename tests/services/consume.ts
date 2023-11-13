@@ -1,11 +1,19 @@
 import {Kafka, KafkaMessage} from 'kafkajs';
 
-export const consume = async (kafka: Kafka, topic: string, parse = true) => {
-    const consumer = kafka.consumer({groupId: 'orchestrator'});    
+export const consume = async (kafka: Kafka, topic: string, parse = true, expectedConsumedCount = 1) => {
+    const consumer = kafka.consumer({groupId: 'orchestrator'});
     await consumer.subscribe({topic: topic, fromBeginning: true});
+    const messages = [];
+    let consumedCount = 0;
     const consumedMessage = await new Promise<KafkaMessage>((resolve) => {
         consumer.run({
-            eachMessage: async ({message}) => resolve(message),
+            eachMessage: async ({message}) => {
+                messages.push(message);
+                consumedCount++;
+                if (consumedCount === expectedConsumedCount) {
+                    resolve(message);
+                }
+            },
         });
     });
     await consumer.disconnect();
