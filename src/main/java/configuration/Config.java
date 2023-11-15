@@ -13,6 +13,7 @@ public class Config {
     //Required
     public static String KAFKA_BROKER;
     public static String GROUP_ID;
+    public static String COMMIT_INTERVAL_MS_CONFIG;
     public static String SOURCE_TOPIC;
     public static String TARGET_TOPIC;
 
