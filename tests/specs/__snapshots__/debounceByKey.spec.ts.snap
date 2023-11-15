@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`tests should debounce by key 1`] = `
+{
+  "headers": {},
+  "value": {
+    "data": "bar",
+  },
+}
+`;

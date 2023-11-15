@@ -19,6 +19,7 @@ public class StreamConfiguration extends Properties {
     public StreamConfiguration() {
         super();
         put(StreamsConfig.APPLICATION_ID_CONFIG, Config.GROUP_ID);
+        put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, Config.COMMIT_INTERVAL_MS_CONFIG);
         put(StreamsConfig.CLIENT_ID_CONFIG, Config.GROUP_ID + "_client");
         put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, Config.KAFKA_BROKER);
         put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());

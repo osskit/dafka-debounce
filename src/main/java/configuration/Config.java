@@ -13,6 +13,7 @@ public class Config {
     //Required
     public static String KAFKA_BROKER;
     public static String GROUP_ID;
+    public static String COMMIT_INTERVAL_MS_CONFIG;
     public static String SOURCE_TOPIC;
     public static String TARGET_TOPIC;
 
@@ -43,6 +44,7 @@ public class Config {
 
         KAFKA_BROKER = getString(dotenv, "KAFKA_BROKER");
         GROUP_ID = getString(dotenv, "GROUP_ID");
+        COMMIT_INTERVAL_MS_CONFIG = getOptionalString(dotenv, "COMMIT_INTERVAL_MS_CONFIG", "30000");
 
         // --------------------
         SOURCE_TOPIC = getString(dotenv, "SOURCE_TOPIC");

@@ -1,46 +1,31 @@
-import {Network, StartedNetwork} from 'testcontainers';
+import {Network} from 'testcontainers';
+import {dafka} from './dafka.js';
 import {kafka} from './kafka.js';
+import {wiremock} from './wiremock.js';
+import {WireMockClient} from '@osskit/wiremock-client';
 import {Kafka} from 'kafkajs';
-import {dafkaDebounce} from './dafkaDebounce';
-
-export interface KafkaOrchestrator {
-    stop: () => Promise<void>;
-    startOrchestrator: (debounceEnv: Record<string, string>) => Promise<Orchestrator>;
-    kafkaClient: Kafka;
-}
 
 export interface Orchestrator {
+    kafkaClient: Kafka;
+    wiremockClient: WireMockClient;
     stop: () => Promise<void>;
-    debounceReady: () => Promise<Response>;
 }
 
-export const start = async () => {
+export const start = async (env: Record<string, string>, topics: string[]) => {
     const network = await new Network().start();
 
-    const {client: kafkaClient, stop: stopKafka} = await kafka(network);
+    const {client: kafkaClient, stop: stopKafka} = await kafka(network, topics);
+    const {stop: stopDafka} = await dafka(network, env);
+    const {client: wiremockClient, stop: stopWiremock} = await wiremock(network);
 
     return {
         kafkaClient,
+        wiremockClient,
         stop: async () => {
+            await stopDafka();
+            await stopWiremock();
             await stopKafka();
             await network.stop();
         },
-        startOrchestrator: async (debounceEnv: Record<string, string>) => {
-            return startOrchestratorInner(network, debounceEnv);
-        },
-    };
-};
-
-const startOrchestratorInner = async (
-    network: StartedNetwork,
-    debounceEnv: Record<string, string>
-): Promise<Orchestrator> => {
-    const {ready: debounceReady, stop: stopService} = await dafkaDebounce(network, debounceEnv);
-
-    return {
-        async stop() {
-            await stopService();
-        },
-        debounceReady,
     };
 };
