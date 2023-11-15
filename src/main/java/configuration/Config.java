@@ -43,7 +43,7 @@ public class Config {
 
         KAFKA_BROKER = getString(dotenv, "KAFKA_BROKER");
         GROUP_ID = getString(dotenv, "GROUP_ID");
-        COMMIT_INTERVAL_MS_CONFIG = getString(dotenv, "COMMIT_INTERVAL_MS_CONFIG", '30000');
+        COMMIT_INTERVAL_MS_CONFIG = getString(dotenv, "COMMIT_INTERVAL_MS_CONFIG", "30000");
 
         // --------------------
         SOURCE_TOPIC = getString(dotenv, "SOURCE_TOPIC");
