@@ -20,6 +20,7 @@ describe('tests', () => {
                     KAFKA_BROKER: 'kafka:9092',
                     MONITORING_SERVER_PORT: '3000',
                     GROUP_ID: groupId,
+                    COMMIT_INTERVAL_MS_CONFIG: '1000',
                     SOURCE_TOPIC: sourceTopic,
                     TARGET_TOPIC: targetTopic,
                     WINDOW_DURATION: '5',
